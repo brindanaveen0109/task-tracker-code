@@ -30,6 +30,17 @@ def add_task(title):
     save_tasks(tasks)
     print(f"Task '{title}' added.")
 
+# List tasks by status
+def list_tasks_by_status(status):
+    tasks = load_tasks()
+    filtered_tasks = [task for task in tasks if task["status"] == status]
+    if filtered_tasks:
+        for i, task in enumerate(filtered_tasks):
+            print(f"{i}. {task['title']} - {task['status']}")
+    else:
+        print(f"No tasks with status '{status}'.")
+
+
 
 # List all tasks
 def list_tasks():
@@ -87,6 +98,12 @@ def main():
                     print("Invalid status. Use 'not done', 'in progress', or 'done'.")
             except ValueError:
                 print("Index must be a number.")
+    elif action == "list-done":
+        list_tasks_by_status("done")
+    elif action == "list-not-done":
+        list_tasks_by_status("not done")
+    elif action == "list-in-progress":
+        list_tasks_by_status("in progress")
     else:
         print(f"Unknown action: {action}")
     
