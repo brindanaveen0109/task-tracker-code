@@ -40,6 +40,15 @@ def list_tasks():
     else:
         print("No tasks found.")
 
+# Update a task's status
+def update_task(index, status):
+    tasks = load_tasks()
+    if 0 <= index < len(tasks):
+        tasks[index]["status"] = status
+        save_tasks(tasks)
+        print(f"Task '{tasks[index]['title']}' updated to '{status}'.")
+    else:
+        print("Invalid task index.")
 
 # Main CLI logic
 def main():
@@ -65,8 +74,22 @@ def main():
     
     elif action == "list":
         list_tasks()
+    elif action == "update":
+        if len(sys.argv) < 4:
+            print("Usage: task_tracker update <index> <status>")
+        else:
+            try:
+                index = int(sys.argv[2])
+                status = sys.argv[3]
+                if status in ["not done", "in progress", "done"]:
+                    update_task(index, status)
+                else:
+                    print("Invalid status. Use 'not done', 'in progress', or 'done'.")
+            except ValueError:
+                print("Index must be a number.")
     else:
         print(f"Unknown action: {action}")
+    
 
 if __name__ == "__main__":
     main()
