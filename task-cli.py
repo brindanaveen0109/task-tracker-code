@@ -61,6 +61,17 @@ def update_task(index, status):
     else:
         print("Invalid task index.")
 
+# Delete a task
+def delete_task(index):
+    tasks = load_tasks()
+    if 0 <= index < len(tasks):
+        task = tasks.pop(index)
+        save_tasks(tasks)
+        print(f"Task '{task['title']}' deleted.")
+    else:
+        print("Invalid task index.")
+
+
 # Main CLI logic
 def main():
     if len(sys.argv) < 2:
@@ -104,9 +115,13 @@ def main():
         list_tasks_by_status("not done")
     elif action == "list-in-progress":
         list_tasks_by_status("in progress")
+    elif action == "delete":
+        if len(sys.argv) < 3:
+            print("Usage: task_tracker delete <index>")
+        else:
+            index = int(sys.argv[2])
+            delete_task(index)
     else:
         print(f"Unknown action: {action}")
-    
-
 if __name__ == "__main__":
     main()
