@@ -3,7 +3,7 @@ from task_cli.storage import load_tasks, save_tasks
 def add_task(title):
     """Add a new task."""
     tasks = load_tasks()
-    tasks.append({"title": title, "status": "not done"})
+    tasks.append({"title": title, "status": "not-done"})
     save_tasks(tasks)
     return f"Task '{title}' added."
 
@@ -19,6 +19,7 @@ def list_tasks():
 def update_task(index, status):
     """Update a task's status."""
     tasks = load_tasks()
+    index -= 1  
     if 0 <= index < len(tasks):
         tasks[index]["status"] = status
         save_tasks(tasks)
@@ -28,10 +29,12 @@ def update_task(index, status):
 
 def delete_task(index):
     """Delete a task."""
+    index = index - 1
     tasks = load_tasks()
-    if 0 <= index < len(tasks):
+    if 0 <= index < len(tasks) :
         task = tasks.pop(index)
         save_tasks(tasks)
         return f"Task '{task['title']}' deleted."
     else:
+        print(index)
         return "Invalid task index."

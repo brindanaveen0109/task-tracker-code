@@ -6,7 +6,7 @@ def main():
         print("Usage: task_tracker <action> [arguments...]")
         print("Actions:")
         print("  add <task_title>        - Add a new task")
-        print("  update <index> <status> - Update task status ('not done', 'in progress', 'done')")
+        print("  update <index> <status> - Update task status ('not-done', 'in-progress', 'done')")
         print("  delete <index>          - Delete a task")
         print("  list                    - List all tasks")
         print("  list-done               - List tasks marked as 'done'")
@@ -24,19 +24,19 @@ def main():
     
     elif action == "list":
         for i, task in enumerate(list_tasks()):
-            print(f"{i}. {task['title']} - {task['status']}")
+            print(f"{i + 1}. {task['title']} - {task['status']}")
     
     elif action == "update":
         if len(sys.argv) < 4:
             print("Usage: task_tracker update <index> <status>")
         else:
             try:
-                index = int(sys.argv[2])
+                index = int(sys.argv[2]) 
                 status = sys.argv[3]
-                if status in ["not done", "in progress", "done"]:
+                if status in ["not-done", "in-progress", "done"]:
                     print(update_task(index, status))
                 else:
-                    print("Invalid status. Use 'not done', 'in progress', or 'done'.")
+                    print("Invalid status. Use 'not-done', 'in-progress', or 'done'.")
             except ValueError:
                 print("Index must be a number.")
     
@@ -49,7 +49,7 @@ def main():
             print(f"{i}. {task['title']} - {task['status']}")
     
     elif action == "list-in-progress":
-        for i, task in enumerate(list_tasks_by_status("in progress")):
+        for i, task in enumerate(list_tasks_by_status("in-progress")):
             print(f"{i}. {task['title']} - {task['status']}")
     
     elif action == "delete":
