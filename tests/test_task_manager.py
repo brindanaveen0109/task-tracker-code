@@ -4,9 +4,6 @@ from task_cli.task_manager import add_task, list_tasks, update_task, delete_task
 class TestTaskManager(unittest.TestCase):
     def setUp(self):
         self.tasks = []
-    
-    
-
 
     def test_add_task(self):
         add_task("Test task")
