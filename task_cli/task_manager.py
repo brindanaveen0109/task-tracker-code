@@ -1,4 +1,5 @@
 from task_cli.storage import load_tasks, save_tasks
+from task_cli.utils import validate_task_id
 
 def add_task(title):
     """Add a new task."""
@@ -20,21 +21,21 @@ def update_task(index, status):
     """Update a task's status."""
     tasks = load_tasks()
     index -= 1  
-    if 0 <= index < len(tasks):
+    if validate_task_id(index + 1):  
         tasks[index]["status"] = status
         save_tasks(tasks)
         return f"Task '{tasks[index]['title']}' updated to '{status}'."
     else:
-        return "Invalid task index."
+        return "Invalid task ID."
 
 def delete_task(index):
     """Delete a task."""
     index = index - 1
     tasks = load_tasks()
-    if 0 <= index < len(tasks) :
+    if validate_task_id(index + 1): 
+        tasks = load_tasks()
         task = tasks.pop(index)
         save_tasks(tasks)
         return f"Task '{task['title']}' deleted."
     else:
-        print(index)
-        return "Invalid task index."
+        return "Invalid task ID."
