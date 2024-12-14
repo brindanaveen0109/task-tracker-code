@@ -6,8 +6,8 @@ def main():
         print("Usage: task_tracker <action> [arguments...]")
         print("Actions:")
         print("  add <task_title>        - Add a new task")
-        print("  update <index> <status> - Update task status ('not-done', 'in-progress', 'done')")
-        print("  delete <index>          - Delete a task")
+        print("  update <id> <status> - Update task status ('not-done', 'in-progress', 'done')")
+        print("  delete <id>          - Delete a task")
         print("  list                    - List all tasks")
         print("  list-done               - List tasks marked as 'done'")
         print("  list-not-done           - List tasks marked as 'not done'")
@@ -28,7 +28,7 @@ def main():
     
     elif action == "update":
         if len(sys.argv) < 4:
-            print("Usage: task_tracker update <index> <status>")
+            print("Usage: task_tracker update <id> <status>")
         else:
             try:
                 index = int(sys.argv[2]) 
@@ -38,7 +38,7 @@ def main():
                 else:
                     print("Invalid status. Use 'not-done', 'in-progress', or 'done'.")
             except ValueError:
-                print("Index must be a number.")
+                print("ID must be a number.")
     
     elif action == "list-done":
         for i, task in enumerate(list_tasks_by_status("done")):
@@ -60,7 +60,7 @@ def main():
                 index = int(sys.argv[2])
                 print(delete_task(index))
             except ValueError:
-                print("Index must be a number.")
+                print("ID must be a number.")
     
     else:
         print(f"Unknown action: {action}")
