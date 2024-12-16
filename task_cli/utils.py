@@ -1,8 +1,7 @@
-from task_cli.storage import load_tasks
+from task_cli.storage import Storage
 
 def validate_task_id(task_id):
-    tasks = load_tasks()
-    if 0 < task_id <= len(tasks):
-        return True
-    else:
-        return False
+    """Validate if a task ID is valid."""
+    storage = Storage()
+    tasks = storage.load_tasks()
+    return 0 < task_id <= len(tasks)
