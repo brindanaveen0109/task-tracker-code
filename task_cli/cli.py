@@ -1,71 +1,52 @@
-import sys
+import argparse
 from task_cli.task_manager import TaskManager
 
 def main():
     task_manager = TaskManager()
     
-    if len(sys.argv) < 2:
-        print("Usage: task_tracker <action> [arguments...]")
-        print("Actions:")
-        print("  add <task_title>        - Add a new task")
-        print("  update <id> <status>    - Update task status ('not-done', 'in-progress', 'done')")
-        print("  delete <id>             - Delete a task")
-        print("  list                    - List all tasks")
-        print("  list-done               - List tasks marked as 'done'")
-        print("  list-not-done           - List tasks marked as 'not-done'")
-        print("  list-in-progress        - List tasks marked as 'in-progress'")
-        return
+    parser = argparse.ArgumentParser(
+        prog="task_tracker", 
+        description = "A CLI tool to manage the tasks."
+    )
 
-    action = sys.argv[1]
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
+    
+    add_parser = subparsers.add_parser("add", help="Add a new task")
+    add_parser.add_argument("--description", "-d", required=True, help="Description of the task")
+    
+    list_parser = subparsers.add_parser("list", help="list all tasks")
+    list_parser.add_argument("--status", "-s", choices=["not-done", "done", "in-progress"], help="Filter task by status")
 
-    if action == "add":
-        if len(sys.argv) < 3:
-            print("Usage: task_tracker add <task_title>")
+    update_parser = subparsers.add_parser("update", help="Update the satus")
+    update_parser.add_argument("--id", "-i", type=int, required=True, help="Update the status of a task by ID")
+    update_parser.add_argument("--status", "-s", choices=["not-done", "done", "in-progress"], required=True, help="New status of the task")
+
+    delete_parser = subparsers.add_parser("delete", help="Delete a task")
+    delete_parser.add_argument("--id", "-i", type=int, required=True, help="Task ID to delete")
+
+    args = parser.parse_args()
+
+    if args.command == "add":
+        result = task_manager.add_task(args.description)
+
+    elif args.command == "list":
+        tasks = task_manager.list_tasks(args.status)
+        if tasks:
+            for i , task in enumerate(tasks):
+                print(f"{i + 1}. {task['title']} - {task['status']}")
         else:
-            print(task_manager.add_task(" ".join(sys.argv[2:])))
-    
-    elif action == "list":
-        for i, task in enumerate(task_manager.list_tasks()):
-            print(f"{i + 1}. {task['title']} - {task['status']}")
-    
-    elif action == "update":
-        if len(sys.argv) < 4:
-            print("Usage: task_tracker update <id> <status>")
-        else:
-            try:
-                index = int(sys.argv[2])
-                status = sys.argv[3]
-                if status in ["not-done", "in-progress", "done"]:
-                    print(task_manager.update_task(index, status))
-                else:
-                    print("Invalid status. Use 'not-done', 'in-progress', or 'done'.")
-            except ValueError:
-                print("ID must be a number.")
-    
-    elif action == "list-done":
-        for i, task in enumerate(task_manager.list_tasks("done")):
-            print(f"{i + 1}. {task['title']} - {task['status']}")
-    
-    elif action == "list-not-done":
-        for i, task in enumerate(task_manager.list_tasks("not-done")):
-            print(f"{i + 1}. {task['title']} - {task['status']}")
-    
-    elif action == "list-in-progress":
-        for i, task in enumerate(task_manager.list_tasks("in-progress")):
-            print(f"{i + 1}. {task['title']} - {task['status']}")
-    
-    elif action == "delete":
-        if len(sys.argv) < 3:
-            print("Usage: task_tracker delete <id>")
-        else:
-            try:
-                index = int(sys.argv[2])
-                print(task_manager.delete_task(index))
-            except ValueError:
-                print("ID must be a number.")
-    
+            print("No tasks found.")
+
+    elif args.command == "update":
+        result = task_manager.update_task(args.id, args.status)
+        print(result)
+
+    elif args.command == "delete":
+        result = task_manager.delete_task(args.id)
+        print(result)
+
     else:
-        print(f"Unknown action: {action}")
+        parser.print_help()
 
 if __name__ == "__main__":
     main()
